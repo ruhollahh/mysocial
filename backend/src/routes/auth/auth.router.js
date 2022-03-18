@@ -10,6 +10,8 @@ import {
 } from "./auth.controller.js";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import { verifyPassword } from "./helpers.js";
+import { validateMiddleware } from "../../middlewares/validate.middleware.js";
+import { signinSchema } from "./schemas.js";
 
 const authRouter = Router();
 
@@ -21,7 +23,6 @@ const customFields = {
 async function verifyCallback(email, password, done) {
   try {
     const user = await User.findOne({ email });
-
     if (!user) {
       return done(null, false);
     }
@@ -66,7 +67,12 @@ authRouter.get("/me", authMiddleware, authController);
 
 authRouter.post("/signup", signupController);
 
-authRouter.post("/signin", passport.authenticate("local"), authController);
+authRouter.post(
+  "/signin",
+  validateMiddleware(signinSchema),
+  passport.authenticate("local"),
+  authController
+);
 
 authRouter.get("/signout", signoutController);
 
