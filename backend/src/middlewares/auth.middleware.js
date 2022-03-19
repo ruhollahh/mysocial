@@ -1,10 +1,8 @@
 function authMiddleware(req, res, next) {
   if (!req.isAuthenticated()) {
-    return res
-      .status(401)
-      .json({ error: { message: "you should login first" } });
+    return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  next();
+  return next();
 }
 
 export { authMiddleware };
