@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { HttpError } from '../utils/HttpError.js';
 
 function errorHandlerMiddleware(error, req, res, next) {
   if (req.file) {
@@ -7,11 +8,11 @@ function errorHandlerMiddleware(error, req, res, next) {
     });
   }
 
-  if (res.headersSent) {
-    return next(error);
+  if (error instanceof HttpError) {
+    return res.status(error.code).json({ message: error.message });
   }
 
-  return res.status(error.code || 500).json({ error });
+  return next(error);
 }
 
 export { errorHandlerMiddleware };

@@ -1,6 +1,8 @@
+import { HttpError } from '../utils/HttpError.js';
+
 function authMiddleware(req, res, next) {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: { message: "Unauthorized" } });
+    return next(new HttpError('Unauthenticated', 401));
   }
   return next();
 }

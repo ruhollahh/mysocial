@@ -9,7 +9,7 @@ const baseURL = process.env.BASE_URL;
 async function httpUpdateProfile(req, res, next) {
   const { id } = req.params;
   if (id !== req.user._id.toString()) {
-    return next(new HttpError('Request is not allowed', 403));
+    return next(new HttpError('Unauthorized', 403));
   }
 
   const image = `${baseURL}/${req.file.path}`;
@@ -20,14 +20,14 @@ async function httpUpdateProfile(req, res, next) {
   try {
     await profileSchema.validate(fields);
   } catch (error) {
-    return res.status(400).json({ error });
+    return next(new HttpError('Wrong inputs', 400));
   }
 
   try {
     const user = await updateUser(id, fields);
     res.status(200).json({ user });
   } catch (error) {
-    return next(error);
+    return next(new HttpError(error.message, 500));
   }
 }
 

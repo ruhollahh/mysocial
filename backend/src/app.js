@@ -20,8 +20,6 @@ app.use(
 app.use(morgan('combined'));
 app.use(express.json());
 
-app.use(errorHandlerMiddleware);
-
 app.use(
   express.static(join(__dirname, '..', 'public'), {
     index: false,
@@ -35,5 +33,7 @@ app.use('/v1', v1);
 app.get('/*', (req, res) => {
   return res.sendFile(join(__dirname, '..', 'public', 'index.html'));
 });
+
+app.use(errorHandlerMiddleware);
 
 export default app;

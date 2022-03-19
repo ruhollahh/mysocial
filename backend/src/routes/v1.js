@@ -7,6 +7,7 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { authRouter } from './auth/auth.router.js';
 import { verifyPassword } from './auth/helpers.js';
 import { profilesRouter } from './profiles/profiles.router.js';
+import { HttpError } from '../utils/HttpError.js';
 
 const v1 = Router();
 
@@ -41,7 +42,7 @@ passport.deserializeUser(async (email, done) => {
     const user = await User.findOne({ email }, '-salt -password');
     done(null, user);
   } catch (error) {
-    done(error);
+    done(new HttpError('Not Found', 404));
   }
 });
 

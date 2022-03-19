@@ -9,13 +9,13 @@ import {
 } from './auth.controller.js';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
 import { validateMiddleware } from '../../middlewares/validate.middleware.js';
-import { signinSchema } from './auth.schemas.js';
+import { signinSchema, signupSchema } from './auth.schemas.js';
 
 const authRouter = Router();
 
 authRouter.get('/me', authMiddleware, authController);
 
-authRouter.post('/signup', signupController);
+authRouter.post('/signup', validateMiddleware(signupSchema), signupController);
 
 authRouter.post(
   '/signin',

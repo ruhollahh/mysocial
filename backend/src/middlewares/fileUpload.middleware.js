@@ -1,5 +1,6 @@
 import multer from 'multer';
 import { v4 as uuid } from 'uuid';
+import { HttpError } from '../utils/HttpError.js';
 
 const MIME_TYPE_MAP = {
   'image/png': 'png',
@@ -18,7 +19,7 @@ const fileUploadMiddleware = multer({
   }),
   fileFilter: (req, file, cb) => {
     const isValid = !!MIME_TYPE_MAP[file.mimetype];
-    const error = isValid ? null : new Error('Invalid mimetype');
+    const error = isValid ? null : new HttpError('Invalid mimetype', 400);
     cb(error, isValid);
   },
 });
