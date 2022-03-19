@@ -22,6 +22,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: `${baseURL}/uploads/images/person-avatar-placeholder.png`,
     },
+    bio: {
+      type: String,
+      default: '',
+    },
+    website: {
+      type: String,
+      default: '',
+    },
+    location: {
+      type: String,
+      default: '',
+    },
     email: {
       type: String,
       required: [true, 'Email is required.'],

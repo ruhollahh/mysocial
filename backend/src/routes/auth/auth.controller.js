@@ -1,5 +1,6 @@
 import { createNewUser } from '../../models/user.model.js';
 import { signupSchema } from './auth.schemas.js';
+import { generatePassword } from './helpers.js';
 
 async function authController(req, res) {
   const { email } = req.user;
@@ -12,9 +13,12 @@ async function signupController(req, res) {
   } catch (error) {
     return res.status(400).json({ error });
   }
-
   try {
-    const user = await createNewUser(req.body);
+    const { salt, hashedPassword: password } = generatePassword(
+      req.body.password
+    );
+    const fields = { ...req.body, password, salt };
+    const user = await createNewUser(fields);
     const { email } = user;
     return res.status(201).json({ user: { email } });
   } catch (error) {

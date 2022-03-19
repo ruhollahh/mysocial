@@ -6,7 +6,7 @@ import { User } from '../models/user.mongo.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { authRouter } from './auth/auth.router.js';
 import { verifyPassword } from './auth/helpers.js';
-import { usersRouter } from './users/users.router.js';
+import { profilesRouter } from './profiles/profiles.router.js';
 
 const v1 = Router();
 
@@ -59,6 +59,6 @@ v1.use(passport.initialize());
 v1.use(passport.session());
 
 v1.use('/auth', authRouter);
-v1.use('/users', authMiddleware, usersRouter);
+v1.use('/profiles', authMiddleware, profilesRouter);
 
 export { v1 };
