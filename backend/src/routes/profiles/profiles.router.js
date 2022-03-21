@@ -5,7 +5,7 @@ import { fileUploadMiddleware } from '../../middlewares/fileUpload.middleware.js
 const profilesRouter = Router();
 
 profilesRouter.put(
-  '/:id',
+  '/',
   fileUploadMiddleware.single('image'),
   httpUpdateProfile
 );

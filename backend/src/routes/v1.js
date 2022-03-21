@@ -8,6 +8,8 @@ import { authRouter } from './auth/auth.router.js';
 import { verifyPassword } from './auth/helpers.js';
 import { profilesRouter } from './profiles/profiles.router.js';
 import { HttpError } from '../utils/HttpError.js';
+import { likesRouter } from './likes/likes.router.js';
+import { postsRouter } from './posts/posts.router.js';
 
 const v1 = Router();
 
@@ -61,5 +63,7 @@ v1.use(passport.session());
 
 v1.use('/auth', authRouter);
 v1.use('/profiles', authMiddleware, profilesRouter);
+v1.use('/likes', authMiddleware, likesRouter);
+v1.use('/posts', authMiddleware, postsRouter);
 
 export { v1 };

@@ -1,10 +1,10 @@
-import { createNewUser } from '../../models/user.model.js';
+import { createUser } from '../../models/user.model.js';
 import { HttpError } from '../../utils/HttpError.js';
 import { generatePassword } from './helpers.js';
 
 async function authController(req, res) {
-  const { email } = req.user;
-  return res.status(200).json({ user: { email } });
+  const { handle } = req.user;
+  return res.status(200).json({ user: { handle } });
 }
 
 async function signupController(req, res, next) {
@@ -13,19 +13,19 @@ async function signupController(req, res, next) {
       req.body.password
     );
     const fields = { ...req.body, password, salt };
-    const user = await createNewUser(fields);
+    const user = await createUser(fields);
 
     req.login(user, function (err) {
       if (err) {
-        return next(new HttpError(err.message, 500));
+        return next(new HttpError(err.message));
       }
     });
 
-    const { email } = user;
-    return res.status(201).json({ user: { email } });
+    const { handle } = user;
+    return res.status(201).json({ user: { handle } });
   } catch (error) {
-    if (error.code && error.code === 11000) {
-      if (error.keyValue && error.keyValue.email) {
+    if (error.code === 11000) {
+      if (error.keyValue?.email) {
         return next(new HttpError('Email is already in use', 400));
       } else if (error.keyValue && error.keyValue.handle) {
         return next(new HttpError('Handle is already in use', 400));

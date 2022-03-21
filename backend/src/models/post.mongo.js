@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema(
   {
-    userHandle: {
-      type: String,
-      required: [true, 'User handle is required.'],
+    userId: {
+      type: mongoose.ObjectId,
+      required: [true, 'userId is required'],
     },
     body: {
       type: String,
-      required: [true, 'Body is required.'],
+      required: [true, 'Body is required'],
     },
     likeCount: {
       type: Number,

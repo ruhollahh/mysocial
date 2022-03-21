@@ -1,16 +1,15 @@
 import { User } from './user.mongo.js';
 
-async function createNewUser(fields) {
+async function createUser(fields) {
   return await User.create(fields);
 }
 
-async function getUser(id) {
+async function findUser(id) {
   return await User.findById(id, '-salt -password');
 }
 
 async function updateUser(id, update) {
-  await User.findByIdAndUpdate(id, update, { new: true });
-  return await getUser(id);
+  return await User.findByIdAndUpdate(id, update, { new: true });
 }
 
-export { createNewUser, updateUser, getUser };
+export { createUser, updateUser, findUser };
