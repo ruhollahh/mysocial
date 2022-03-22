@@ -1,4 +1,5 @@
-import { createPost } from '../../models/post.model.js';
+import { createPost, deletePost } from '../../models/post.model.js';
+import { HttpError } from '../../utils/HttpError.js';
 
 async function httpCreatePost(req, res, next) {
   const { body } = req.body;
@@ -11,4 +12,14 @@ async function httpCreatePost(req, res, next) {
   }
 }
 
-export { httpCreatePost };
+async function httpDeletePost(req, res, next) {
+  const { id } = req.params;
+
+  try {
+    await deletePost(id);
+  } catch (e) {
+    return next(new HttpError(e.message));
+  }
+}
+
+export { httpCreatePost, httpDeletePost };

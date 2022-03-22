@@ -1,5 +1,5 @@
 import { Like } from './like.mongo.js';
-import { findPost, updatePost } from './post.model.js';
+import { decPostLikeCount, incPostLikeCount } from './post.model.js';
 
 async function createLike({ userIdObject, postId }) {
   const userId = userIdObject.toString();
@@ -10,8 +10,7 @@ async function createLike({ userIdObject, postId }) {
     postId,
   });
 
-  const { likeCount } = await findPost(postId);
-  await updatePost(postId, { likeCount: likeCount + 1 });
+  await incPostLikeCount(postId);
 
   return like;
 }
@@ -22,4 +21,11 @@ async function findLike({ userIdObject, postId }) {
   return await Like.findOne({ userId_postId });
 }
 
-export { createLike, findLike };
+async function deleteLike(id) {
+  const { postId } = await Like.findById(id);
+  const result = await Like.findByIdAndRemove(id);
+  await decPostLikeCount(postId);
+  return result;
+}
+
+export { createLike, findLike, deleteLike };

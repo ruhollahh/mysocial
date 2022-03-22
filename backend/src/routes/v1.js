@@ -10,6 +10,7 @@ import { profilesRouter } from './profiles/profiles.router.js';
 import { HttpError } from '../utils/HttpError.js';
 import { likesRouter } from './likes/likes.router.js';
 import { postsRouter } from './posts/posts.router.js';
+import { commentsRouter } from './comments/comments.router.js';
 
 const v1 = Router();
 
@@ -63,7 +64,8 @@ v1.use(passport.session());
 
 v1.use('/auth', authRouter);
 v1.use('/profiles', authMiddleware, profilesRouter);
-v1.use('/likes', authMiddleware, likesRouter);
 v1.use('/posts', authMiddleware, postsRouter);
+v1.use('/comments', authMiddleware, commentsRouter);
+v1.use('/likes', authMiddleware, likesRouter);
 
 export { v1 };

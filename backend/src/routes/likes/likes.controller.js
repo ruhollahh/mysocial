@@ -1,10 +1,10 @@
-import { createLike, findLike } from '../../models/like.model.js';
+import { createLike, deleteLike, findLike } from '../../models/like.model.js';
 import { HttpError } from '../../utils/HttpError.js';
 
 async function httpCreateLike(req, res, next) {
   const { postId } = req.body;
   if (!postId) {
-    return next(new HttpError('provide that shit', 400));
+    return next(new HttpError('Post ID is required', 400));
   }
 
   const userIdObject = req.user._id;
@@ -22,7 +22,7 @@ async function httpCreateLike(req, res, next) {
 async function httpFindLike(req, res, next) {
   const { postId } = req.query;
   if (!postId) {
-    return next(new HttpError('provide that shit', 400));
+    return next(new HttpError('Post ID is required', 400));
   }
   const userIdObject = req.user._id;
   try {
@@ -33,4 +33,14 @@ async function httpFindLike(req, res, next) {
   }
 }
 
-export { httpCreateLike, httpFindLike };
+async function httpDeleteLike(req, res, next) {
+  const { id } = req.params;
+  try {
+    await deleteLike(id);
+    return res.status(200).json({ message: 'Like deleted successfully' });
+  } catch (e) {
+    return next(new HttpError(e.message));
+  }
+}
+
+export { httpCreateLike, httpFindLike, httpDeleteLike };
