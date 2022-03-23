@@ -7,15 +7,15 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, 'First name is required'],
+      required: [true, 'first name is required'],
     },
     lastName: {
       type: String,
-      required: [true, 'Last name is required'],
+      required: [true, 'last name is required'],
     },
     handle: {
       type: String,
-      require: [true, 'Handle is required'],
+      require: [true, 'handle is required'],
       unique: true,
     },
     image: {
@@ -36,12 +36,12 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, 'email is required'],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [true, 'password is required'],
     },
     salt: {
       type: String,

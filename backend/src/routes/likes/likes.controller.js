@@ -1,4 +1,9 @@
-import { createLike, deleteLike, findLike } from '../../models/like.model.js';
+import {
+  createLike,
+  deleteLike,
+  findLikeById,
+  findUserLike,
+} from '../../models/like.model.js';
 import { HttpError } from '../../utils/HttpError.js';
 
 async function httpCreateLike(req, res, next) {
@@ -7,9 +12,9 @@ async function httpCreateLike(req, res, next) {
     return next(new HttpError('Post ID is required', 400));
   }
 
-  const userIdObject = req.user._id;
+  const userId = req.user._id;
   try {
-    const like = await createLike({ userIdObject, postId });
+    const like = await createLike({ userId, postId });
     return res.status(201).json({ like });
   } catch (error) {
     if (error.code === 11000 && error.keyValue?.userId_postId) {
@@ -24,9 +29,9 @@ async function httpFindLike(req, res, next) {
   if (!postId) {
     return next(new HttpError('Post ID is required', 400));
   }
-  const userIdObject = req.user._id;
+  const userId = req.user._id;
   try {
-    const like = await findLike({ userIdObject, postId });
+    const like = await findUserLike({ userId, postId });
     return res.status(200).json({ like });
   } catch (error) {
     return next(new HttpError(error.message));
@@ -36,6 +41,12 @@ async function httpFindLike(req, res, next) {
 async function httpDeleteLike(req, res, next) {
   const { id } = req.params;
   try {
+    const like = await findLikeById(id);
+    if (!like) {
+      return next(new HttpError('Not Found', 404));
+    } else if (like.userId !== req.user._id) {
+      return next(new HttpError('Unauthorized', 403));
+    }
     await deleteLike(id);
     return res.status(200).json({ message: 'Like deleted successfully' });
   } catch (e) {

@@ -1,7 +1,8 @@
 import {
   createComment,
   deleteComment,
-  findComments,
+  findPostComments,
+  findCommentById,
 } from '../../models/comment.model.js';
 import { HttpError } from '../../utils/HttpError.js';
 
@@ -11,23 +12,22 @@ async function httpCreateComment(req, res, next) {
     return next(new HttpError('Post ID is required', 400));
   }
 
-  const userIdObject = req.user._id;
+  const userId = req.user._id;
   try {
-    const comment = await createComment({ userIdObject, postId, body });
+    const comment = await createComment({ userId, postId, body });
     return res.status(201).json({ comment });
   } catch (error) {
     return next(new HttpError(error.message));
   }
 }
 
-async function httpFindComments(req, res, next) {
+async function httpFindPostComments(req, res, next) {
   const { postId } = req.query;
   if (!postId) {
     return next(new HttpError('Post ID is required', 400));
   }
-  const userIdObject = req.user._id;
   try {
-    const comments = await findComments({ userIdObject, postId });
+    const comments = await findPostComments(postId);
     return res.status(200).json({ comments });
   } catch (error) {
     return next(new HttpError(error.message));
@@ -36,7 +36,14 @@ async function httpFindComments(req, res, next) {
 
 async function httpDeleteComment(req, res, next) {
   const { id } = req.params;
+
   try {
+    const comment = await findCommentById(id);
+    if (!comment) {
+      return next(new HttpError('Not Found', 404));
+    } else if (comment.userId !== req.user._id) {
+      return next(new HttpError('Unauthorized', 403));
+    }
     await deleteComment(id);
     return res.status(200).json({ message: 'Comment deleted successfully' });
   } catch (e) {
@@ -44,4 +51,4 @@ async function httpDeleteComment(req, res, next) {
   }
 }
 
-export { httpCreateComment, httpFindComments, httpDeleteComment };
+export { httpCreateComment, httpFindPostComments, httpDeleteComment };

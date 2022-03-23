@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
     },
     body: {
       type: String,
-      required: [true, 'Body is required'],
+      required: [true, 'body is required'],
     },
     likeCount: {
       type: Number,

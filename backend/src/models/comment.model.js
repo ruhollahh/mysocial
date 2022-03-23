@@ -1,8 +1,7 @@
 import { Comment } from './comment.mongo.js';
 import { decPostCommentCount, incPostCommentCount } from './post.model.js';
 
-async function createComment({ userIdObject, postId, body }) {
-  const userId = userIdObject.toString();
+async function createComment({ userId, postId, body }) {
   const comment = await Comment.create({
     userId,
     postId,
@@ -14,9 +13,12 @@ async function createComment({ userIdObject, postId, body }) {
   return comment;
 }
 
-async function findComments({ userIdObject, postId }) {
-  const userId = userIdObject.toString();
-  return await Comment.find({ userId, postId });
+async function findPostComments(postId) {
+  return await Comment.find({ postId });
+}
+
+async function findCommentById(id) {
+  return await Comment.findById(id);
 }
 
 async function deleteComment(id) {
@@ -26,4 +28,4 @@ async function deleteComment(id) {
   return result;
 }
 
-export { createComment, findComments, deleteComment };
+export { createComment, findPostComments, findCommentById, deleteComment };
