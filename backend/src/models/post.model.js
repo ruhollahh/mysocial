@@ -5,7 +5,7 @@ async function createPost({ userId, body }) {
 }
 
 async function findPostById(id) {
-  return await Post.findOne({ userId, _id: postId });
+  return await Post.findById(id);
 }
 
 async function updatePost(id, update) {
